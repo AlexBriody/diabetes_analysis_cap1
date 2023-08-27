@@ -1,0 +1,187 @@
+---
+title: "diabetes_analysis"
+output: pdf_document
+date: "2023-08-26"
+---
+
+### The dataset contains information about Pima Indian women, and it is often used to build predictive models to determine whether a person has diabetes based on certain features or risk factors. Carrying my hypotheses over from the Excel document: H0: There is no statistically significant relationship between bmi and diabetes outcome.
+
+### HA: There IS statistically significanct relationship between bmi and diabetes outcome.
+
+Step 1: Imports
+
+Import libraries, import data
+
+```{r}
+library(tidyverse)
+df <- read.csv("/Users/alexanderbriody/Desktop/Coding Temple/Capstone 1/diabetes_analysis_cap1/diabetes.csv")
+
+head(df)
+View(df)
+```
+
+```{r}
+# Cleaning the data by replacing all "." with "_" and coverting to lowercase for column names
+clean_fun <- function(x){
+  names(x) <- names(x) %>% tolower()
+  return(x)
+}
+
+df <- clean_fun(df)
+View(df)
+```
+
+## Step2: Tidy the Data
+
+Check for data types following format
+
+Check and replace null values
+
+```{r}
+df %>% summarize(na_count = sum(is.na(df)))
+colSums(is.na(df))
+```
+
+Step 3: Explore
+
+Gather information:
+
+Decide on independent/dependent variables
+
+Decide on a stat/model test
+
+Visualizations of columns
+
+Descriptive statistics
+
+```{r}
+head(df)
+```
+
+```{r}
+# Outcome is the target variable; 0 for no diabetes, 1 for diabetes.
+# Pregnancies: Number of times the woman has been pregnant.
+cor(df$outcome, df$pregnancies)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+# Glucose: Plasma glucose concentration in an oral glucose tolerance test.
+cor(df$outcome, df$glucose)
+# A .4666 correlation is considered a medium correlation. A medium correlation indicates a moderate linear relationship between the variables. 
+```
+
+```{r}
+# BloodPressure: Diastolic blood pressure (mm Hg).
+cor(df$outcome, df$bloodpressure)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+# SkinThickness: Triceps skinfold thickness (mm).
+cor(df$outcome, df$skinthickness)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+# Insulin: 2-Hour serum insulin (mu U/ml).
+cor(df$outcome, df$insulin)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+# BMI: Body mass index (weight in kg / (height in meters)^2).
+cor(df$outcome, df$bmi)
+# A .3000 correlation is considered at the cusp of a medium correlation. A medium correlation indicates a moderate linear relationship between the variables. 
+```
+
+```{r}
+# DiabetesPedigreeFunction: A function that scores the likelihood of diabetes based on family history.
+cor(df$outcome, df$diabetespedigreefunction)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+# Age: Age in years.
+cor(df$outcome, df$age)
+# A low correlation score between these two variables indicates that there is little to no linear relationship between them.
+```
+
+```{r}
+ggplot(df, aes(x = outcome, y = bmi)) +
+  geom_jitter(aes(color = factor(outcome)), alpha = 0.5) +
+  labs(x = "outcome", y = "bmi") +
+  scale_color_discrete(name = "outcome", labels = c("no diabetes", "diabetes")) 
+
+# This graph shows that there is no clear cut relationshp between diabetes outcome and bmi. While some higher bmi's is associated with diabetes outcome, many higher bmi's are also not associated with diabetes, though small portion of the top bmi's are associated with diabetes outcome.
+```
+
+```{r}
+
+ggplot(df, aes(x = bmi, y = outcome)) +
+  geom_point(aes(color = factor(outcome)), alpha = 0.5) +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"),  color = "blue") +
+  labs(x = "bmi", y = "outcome") +
+  scale_color_discrete(name = "outcome", labels = c("no diabetes", "diabetes")) 
+
+# This graph tells me about the relationship between bmi and diabetes outcome. The best fit curve is a sigmoid between a x-variable (the predictor) and a binary, target, dependent variable - the diabetes coutcome. It does visually frame the diabetes outcome to be associated with higher bmi's in general, but there is still a lot of overlap between the two diabetes outcomes for the bmi's.
+```
+
+```{r}
+summary(glm(df$outcome ~ df$bmi))
+# However, when I did a linear regression model test to further explore the relationship between diabetes coutcome and bmi, I get a clearer story (summarize below)
+```
+
+The significance codes indicated to me that the level of significance were significant.
+
+For the intercept (value of y when x is zero), \*\* indicates high statistical significance, and a p-value of .00165 falls way under my chosen statistical significance level of 0.05, and this tells me to reject the H0 (null) hypothesis.
+
+For the df\$bmi or my predictor, the p-value, as indicated by \*\*\*, was of extremely high statistical signficance being 2 x 10 (to the negative 16), far, far below 0.05. And so, this gives me the confidence to reject the H0 hypothesis in favor of the HA hypothesis: There is a statistically significant relationship between the bmi and the diabetes outcome.
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
