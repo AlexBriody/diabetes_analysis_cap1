@@ -14,7 +14,7 @@ Import libraries, import data
 
 ```{r}
 library(tidyverse)
-df <- read.csv("/Users/alexanderbriody/Desktop/Coding Temple/Capstone 1/diabetes_analysis_cap1/diabetes.csv")
+df <- read.csv("/Users/alexanderbriody/Desktop/Coding Temple/capstone_1/diabetes_analysis_cap1/diabetes.csv")
 
 head(df)
 View(df)
@@ -68,7 +68,7 @@ cor(df$outcome, df$pregnancies)
 ```{r}
 # Glucose: Plasma glucose concentration in an oral glucose tolerance test.
 cor(df$outcome, df$glucose)
-# A .4666 correlation is considered a medium correlation. A medium correlation indicates a moderate linear relationship between the variables. 
+# A .4666 correlation is considered a medium correlation. A medium correlation indicates a moderate linear relationship between the variables. This is line with the Excel line graph between glucose concentration and bmi, suggesting a statistical relationship. 
 ```
 
 ```{r}
@@ -124,7 +124,7 @@ ggplot(df, aes(x = bmi, y = outcome)) +
   labs(x = "bmi", y = "outcome") +
   scale_color_discrete(name = "outcome", labels = c("no diabetes", "diabetes")) 
 
-# This graph tells me about the relationship between bmi and diabetes outcome. The best fit curve is a sigmoid between a x-variable (the predictor) and a binary, target, dependent variable - the diabetes coutcome. It does visually frame the diabetes outcome to be associated with higher bmi's in general, but there is still a lot of overlap between the two diabetes outcomes for the bmi's.
+# This graph tells me about the relationship between bmi and diabetes outcome. The best fit curve is a sigmoid between a x-variable (the predictor) and a binary, target, dependent variable - the diabetes outcome. It does visually frame the diabetes outcome to be associated with higher bmi's in general, but there is still a lot of overlap between the two diabetes outcomes for the bmi's.
 ```
 
 ```{r}
@@ -132,11 +132,21 @@ summary(glm(df$outcome ~ df$bmi))
 # However, when I did a linear regression model test to further explore the relationship between diabetes coutcome and bmi, I get a clearer story (summarize below)
 ```
 
-The significance codes indicated to me that the level of significance were significant.
+The t-values are -3.159 for the intercept and 8.472 for the bmi coefficient. The t-value for the intercept measures the significantly the intercept deviates from 0 (since the intercept represents the predicted value of the outcome variable when all predictor variables are zero). The -3.159 indicates that the intercept is significantly different from 0, but this value may not have very much meaning for interpreting the data.
 
-For the intercept (value of y when x is zero), \*\* indicates high statistical significance, and a p-value of .00165 falls way under my chosen statistical significance level of 0.05, and this tells me to reject the H0 (null) hypothesis.
+However, the t-value for the bmi coefficient (which represents the change in the diabetes outcome for every unit change in bmi) measures the statistical significance of the relationship between bmi and the diabetes outcome. With the t-value for the bmi coefficient as 8.472, it suggests a corresponding low p-value, indicating that there may be a good statistical relationship between bmi and the diabetes outcome. To decide, we must look at the p-values as high t-values corresponding to low p-values indicate statistical significance.
 
-For the df\$bmi or my predictor, the p-value, as indicated by \*\*\*, was of extremely high statistical signficance being 2 x 10 (to the negative 16), far, far below 0.05. And so, this gives me the confidence to reject the H0 hypothesis in favor of the HA hypothesis: There is a statistically significant relationship between the bmi and the diabetes outcome.
+Based on the significance codes, the p-values indicate a very high level of statistical signficance.
+
+More specifically, for the intercept (value of the outcome when the predictor is 0), \*\* indicates high statistical significance, and a p-value of .00165 falls way under my chosen statistical significance level of 0.05, informing me to reject the H0 (null) hypothesis.
+
+For the bmi predictor, the p-value, as indicated by \*\*\*, was of extremely high statistical significance being 2 x 10[-16] (raised to the power of-16) - a very, very small number - far, far below 0.05. And so, this gives me the confidence to reject the H0 hypothesis in favor of the HA hypothesis: There is a statistically significant relationship between the bmi and the diabetes outcome.
+
+From the test results, I can also formulate the linear regression model for predicting the diabetes outcome based on the bmi using the following predictive formula:
+
+  y = -0.21752 + 0.01771x, where y is the predicted diabetes outcome and x is the bmi of the person
+
+  (-0.21752 is the intercept coefficient and the 0.01771 is the bmi coefficient)
 
 ```{r}
 ```
